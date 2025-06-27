@@ -31,6 +31,12 @@ const Weather = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("Weather userId:", userId);
+  }, []);
+
   if (loading) return <div>Hava durumu yükleniyor...</div>;
   if (error) return <div>{error}</div>;
   if (!weather) return <div>Veri yok.</div>;

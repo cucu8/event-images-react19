@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const KONUM = {
   latitude: 41.0082, // Örnek: İstanbul
   longitude: 28.9784,
@@ -6,6 +8,12 @@ const KONUM = {
 
 const Konum = () => {
   const mapsUrl = `https://www.google.com/maps?q=${KONUM.latitude},${KONUM.longitude}`;
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("Konum userId:", userId);
+  }, []);
 
   return (
     <section id="konum" className="flex flex-col items-center my-8 p-12">
@@ -18,7 +26,6 @@ const Konum = () => {
       >
         Google Haritalar'da Aç
       </a>
-      <p className="mt-2 text-pink-500">{KONUM.mekanAdi}</p>
     </section>
   );
 };

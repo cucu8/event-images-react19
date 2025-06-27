@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { navLinks } from "../costants";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = window.location.pathname;
+  const search = window.location.search;
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("Navbar userId:", userId);
+  }, []);
 
   return (
     <nav className="w-full bg-gradient-to-r from-indigo-500 via-pink-400 to-pink-300 shadow-lg fixed top-0 left-0 z-50">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Logo */}
         <a
-          href="#davetiye"
+          href={`${pathname}${search}#davetiye`}
           className="text-3xl font-bold text-white tracking-wide font-dancing-script drop-shadow-lg"
         >
           Image&events
@@ -19,7 +27,7 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <a
               key={link.name}
-              href={link.href}
+              href={`${pathname}${search}${link.href}`}
               className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
             >
               {link.name}
@@ -55,7 +63,7 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <a
               key={link.name}
-              href={link.href}
+              href={`${pathname}${search}${link.href}`}
               className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
               onClick={() => setMenuOpen(false)}
             >

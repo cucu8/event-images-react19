@@ -21,6 +21,12 @@ const Yorumlar = () => {
     setYorumlar(dummyYorumlar);
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("Yorumlar userId:", userId);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isim.trim() || !yorum.trim()) return;

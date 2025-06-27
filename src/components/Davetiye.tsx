@@ -1,4 +1,12 @@
+import { useEffect } from "react";
+
 const Davetiye = () => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("Davetiye userId:", userId);
+  }, []);
+
   return (
     <section id="davetiye" className="flex flex-col items-center my-8">
       <h2 className="text-2xl font-bold mb-4 text-indigo-900 drop-shadow">

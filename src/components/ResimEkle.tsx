@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const MAX_FILES = 5;
 
@@ -6,6 +6,12 @@ const ResimEkle = () => {
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("userId");
+    console.log("ResimEkle userId:", userId);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -49,15 +55,29 @@ const ResimEkle = () => {
     <section id="resimekle" className="flex flex-col items-center my-8">
       <h2 className="text-xl font-bold mb-4 text-indigo-900">Fotoğraf Yükle</h2>
       <form className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200">
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="block w-full text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-indigo-500 file:to-pink-400 file:text-white hover:file:from-pink-400 hover:file:to-indigo-500 file:transition"
-          aria-label="Fotoğraf seç"
-        />
+        <div className="relative w-full flex flex-col items-center">
+          <input
+            id="foto-sec"
+            type="file"
+            accept="image/*"
+            multiple
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            aria-label="Fotoğraf seç"
+          />
+          <label
+            htmlFor="foto-sec"
+            className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-400 text-white font-semibold px-6 py-2 rounded-full shadow hover:from-pink-400 hover:to-indigo-500 transition text-center w-full"
+          >
+            Fotoğraf Seç
+          </label>
+          {images.length > 0 && (
+            <span className="mt-2 text-sm text-gray-600">
+              {images.length} fotoğraf seçildi
+            </span>
+          )}
+        </div>
         {error && (
           <div className="text-pink-600 font-medium text-sm">{error}</div>
         )}
@@ -86,6 +106,13 @@ const ResimEkle = () => {
           </div>
         )}
         <div className="flex gap-2 mt-2">
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold px-4 py-2 rounded-full shadow hover:from-emerald-400 hover:to-green-600 transition"
+            disabled={images.length === 0}
+          >
+            Yükle
+          </button>
           <button
             type="button"
             onClick={handleReset}
