@@ -8,7 +8,7 @@ import Yorumlar from "./components/Yorumlar";
 function App() {
   return (
     <div
-      className=" h-screen w-screen"
+      className="h-screen w-screen"
       style={{
         backgroundImage: "url('/main.jpg')",
         backgroundSize: "cover",
@@ -16,7 +16,7 @@ function App() {
       }}
     >
       <Navbar />
-      <div className="h-full w-full pt-12 text-white overflow-auto">
+      <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
         <Davetiye />
         <Weather />
         <Konum />
