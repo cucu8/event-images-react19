@@ -9,3 +9,38 @@ html {
     font-family: "Dancing Script", cursive;
   }
 }
+
+body {
+  background: linear-gradient(135deg, #f3f4f6 0%, #fbcfe8 100%);
+  color: #1f2937;
+  min-height: 100vh;
+}
+
+input,
+textarea {
+  color: #1f2937;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Scrollbar stilleri */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #a5b4fc 0%, #f472b6 100%);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a5b4fc #f3f4f6;
+}

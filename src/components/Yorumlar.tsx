@@ -37,24 +37,24 @@ const Yorumlar = () => {
       <h2 className="text-xl font-bold mb-4 text-white">Yorumlar</h2>
       <form
         onSubmit={handleSubmit}
-        className="w-full bg-white/80 rounded p-4 shadow mb-6 flex flex-col gap-3"
+        className="w-full bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-3 mb-6 border border-gray-200"
       >
         <input
           type="text"
           placeholder="Adınız"
           value={isim}
           onChange={(e) => setIsim(e.target.value)}
-          className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black placeholder-black"
+          className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300"
         />
         <textarea
           placeholder="Yorumunuz"
           value={yorum}
           onChange={(e) => setYorum(e.target.value)}
-          className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 min-h-[80px] text-black placeholder-black"
+          className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[80px]"
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700 transition self-end"
+          className="bg-gradient-to-r from-indigo-500 to-pink-400 text-white font-semibold px-6 py-2 rounded-full shadow hover:from-pink-400 hover:to-indigo-500 transition self-end"
         >
           Gönder
         </button>
@@ -64,10 +64,13 @@ const Yorumlar = () => {
           <div className="text-white/80 text-center">Henüz yorum yok.</div>
         )}
         {yorumlar.map((y, i) => (
-          <div key={i} className="bg-white/90 rounded p-3 shadow">
-            <div className="font-semibold text-black">{y.isim}</div>
-            <div className="text-black whitespace-pre-line">{y.yorum}</div>
-            <div className="text-xs text-black/60 mt-1">
+          <div
+            key={i}
+            className="bg-white/90 rounded-2xl shadow p-4 border border-gray-200"
+          >
+            <div className="font-semibold text-indigo-900">{y.isim}</div>
+            <div className="text-gray-800 whitespace-pre-line">{y.yorum}</div>
+            <div className="text-xs text-pink-500 mt-1">
               {y.tarih.toLocaleString()}
             </div>
           </div>

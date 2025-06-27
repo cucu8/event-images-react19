@@ -9,16 +9,16 @@ const Konum = () => {
 
   return (
     <section id="konum" className="flex flex-col items-center my-8 p-12">
-      <h2 className="text-xl font-bold mb-4 text-white">Davet Yeri</h2>
+      <h2 className="text-xl font-bold mb-4 text-indigo-900">Davet Yeri</h2>
       <a
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700 transition"
+        className="bg-gradient-to-r from-indigo-500 to-pink-400 text-white font-semibold px-6 py-2 rounded-full shadow hover:from-pink-400 hover:to-indigo-500 transition mb-4"
       >
         Google Haritalar'da Aç
       </a>
-      <p className="mt-2 text-white">{KONUM.mekanAdi}</p>
+      <p className="mt-2 text-pink-500">{KONUM.mekanAdi}</p>
     </section>
   );
 };

@@ -6,7 +6,7 @@ const KONUM = {
   mekanAdi: "Davet Mekanı",
 };
 
-const TARIH = "2024-06-10"; // İstediğin tarihi buraya yaz
+const TARIH = "2024-06-10";
 
 const Weather = () => {
   const [weather, setWeather] = useState(null);
@@ -37,7 +37,7 @@ const Weather = () => {
 
   return (
     <section id="hava" className="flex flex-col items-center my-8">
-      <h2 className="text-xl font-bold mb-4 text-white">
+      <h2 className="text-xl font-bold mb-4 text-indigo-900">
         Davet Günü Hava Durumu
       </h2>
       <div className="bg-white/80 rounded p-4 shadow text-black">

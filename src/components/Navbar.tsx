@@ -5,12 +5,12 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-[#6e83ba] shadow-md fixed top-0 left-0 z-50">
+    <nav className="w-full bg-gradient-to-r from-indigo-500 via-pink-400 to-pink-300 shadow-lg fixed top-0 left-0 z-50">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Logo */}
         <a
           href="#davetiye"
-          className="text-2xl font-bold text-white tracking-wide font-dancing-script"
+          className="text-3xl font-bold text-white tracking-wide font-dancing-script drop-shadow-lg"
         >
           Image&events
         </a>
@@ -20,7 +20,7 @@ const Navbar = () => {
             <a
               key={link.name}
               href={link.href}
-              className="text-white hover:text-yellow-200 transition-colors duration-200 font-medium px-2 py-1 rounded hover:bg-white/10"
+              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
             >
               {link.name}
             </a>
@@ -28,7 +28,7 @@ const Navbar = () => {
         </div>
         {/* Hamburger Icon */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-10 h-10 focus:outline-none"
+          className="md:hidden flex flex-col justify-center items-center w-10 h-10 focus:outline-none bg-white/20 rounded-full shadow"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label="Menüyü Aç/Kapat"
         >
@@ -51,12 +51,12 @@ const Navbar = () => {
       </div>
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#6e83ba] px-4 pb-4 pt-2 flex flex-col gap-4 shadow-lg animate-fade-in-down">
+        <div className="md:hidden bg-gradient-to-r from-indigo-500 via-pink-400 to-pink-300 px-4 pb-4 pt-2 flex flex-col gap-4 shadow-lg animate-fade-in-down">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="text-white hover:text-yellow-200 transition-colors duration-200 font-medium px-2 py-2 rounded hover:bg-white/10"
+              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
               onClick={() => setMenuOpen(false)}
             >
               {link.name}
