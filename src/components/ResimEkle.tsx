@@ -34,7 +34,11 @@ const ResimEkle = () => {
   const handleReset = () => {
     setImages([]);
     setError("");
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.type = "";
+      fileInputRef.current.type = "file";
+    }
   };
 
   const handleRemove = (index: number) => {
