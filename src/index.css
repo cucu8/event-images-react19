@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .font-dancing-script {
+    font-family: "Dancing Script", cursive;
+  }
+}
