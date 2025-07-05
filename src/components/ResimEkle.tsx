@@ -1,11 +1,29 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useActionState, startTransition } from "react";
 
 const MAX_FILES = 5;
+
+interface FormState {
+  success: boolean;
+  error: string;
+}
 
 const ResimEkle = () => {
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formState, formAction, isPending] = useActionState<FormState, FormData>(
+    async (prevState: FormState, formData: FormData): Promise<FormState> => {
+      try {
+        // Simulated upload - replace with actual API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log("Uploading images...", formData);
+        return { success: true, error: "" };
+      } catch (err) {
+        return { success: false, error: "Yükleme sırasında bir hata oluştu." };
+      }
+    },
+    { success: false, error: "" }
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -38,13 +56,15 @@ const ResimEkle = () => {
   };
 
   const handleReset = () => {
-    setImages([]);
-    setError("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-      fileInputRef.current.type = "";
-      fileInputRef.current.type = "file";
-    }
+    startTransition(() => {
+      setImages([]);
+      setError("");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+        fileInputRef.current.type = "";
+        fileInputRef.current.type = "file";
+      }
+    });
   };
 
   const handleRemove = (index: number) => {
@@ -54,7 +74,7 @@ const ResimEkle = () => {
   return (
     <section id="resimekle" className="flex flex-col items-center my-8">
       <h2 className="text-xl font-bold mb-4 text-indigo-900">Fotoğraf Yükle</h2>
-      <form className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200">
+      <form action={formAction} className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200">
         <div className="relative w-full flex flex-col items-center">
           <input
             id="foto-sec"
@@ -78,8 +98,11 @@ const ResimEkle = () => {
             </span>
           )}
         </div>
-        {error && (
-          <div className="text-pink-600 font-medium text-sm">{error}</div>
+        {(error || formState.error) && (
+          <div className="text-pink-600 font-medium text-sm">{error || formState.error}</div>
+        )}
+        {formState.success && (
+          <div className="text-green-600 font-medium text-sm">Fotoğraflar başarıyla yüklendi!</div>
         )}
         {images.length > 0 && (
           <div className="flex flex-wrap gap-4 justify-center">
@@ -108,16 +131,16 @@ const ResimEkle = () => {
         <div className="flex gap-2 mt-2">
           <button
             type="submit"
-            className="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold px-4 py-2 rounded-full shadow hover:from-emerald-400 hover:to-green-600 transition"
-            disabled={images.length === 0}
+            className="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold px-4 py-2 rounded-full shadow hover:from-emerald-400 hover:to-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={images.length === 0 || isPending}
           >
-            Yükle
+            {isPending ? "Yükleniyor..." : "Yükle"}
           </button>
           <button
             type="button"
             onClick={handleReset}
-            className="bg-gradient-to-r from-pink-400 to-indigo-500 text-white font-semibold px-4 py-2 rounded-full shadow hover:from-indigo-500 hover:to-pink-400 transition"
-            disabled={images.length === 0 && !error}
+            className="bg-gradient-to-r from-pink-400 to-indigo-500 text-white font-semibold px-4 py-2 rounded-full shadow hover:from-indigo-500 hover:to-pink-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={(images.length === 0 && !error) || isPending}
           >
             Sıfırla
           </button>
