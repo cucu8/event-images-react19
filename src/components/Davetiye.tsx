@@ -1,11 +1,8 @@
-import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const Davetiye = () => {
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("userId");
-    console.log("Davetiye userId:", userId);
-  }, []);
+  const { userId } = useParams<{ userId: string }>();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   return (
     <section id="davetiye" className="flex flex-col items-center my-8">
@@ -13,12 +10,22 @@ const Davetiye = () => {
         Davetiye
       </h2>
       <div className="w-full max-w-md bg-white/90 rounded-2xl overflow-hidden shadow-lg border-4 border-pink-200">
-        <img
-          src="/main.jpg"
-          alt="Davetiye Fotoğrafı"
-          className="w-full h-auto object-cover"
-          style={{ maxHeight: 400 }}
-        />
+        {userId ? (
+          <img
+            src={`${apiUrl}/InvitationImage/user/${userId}/image`}
+            alt="Davetiye"
+            className="w-full h-auto object-cover"
+            style={{ maxHeight: 400 }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/martini_glass.svg';
+            }}
+          />
+        ) : (
+          <div className="w-full h-64 flex items-center justify-center bg-gray-200">
+            <p className="text-gray-500">Davetiye yükleniyor...</p>
+          </div>
+        )}
       </div>
     </section>
   );
