@@ -1,4 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
+import { useParams } from "react-router-dom";
 import Davetiye from "./components/Davetiye";
 import Konum from "./components/Konum";
 import Navbar from "./components/Navbar";
@@ -21,6 +22,8 @@ const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetError
 );
 
 function App() {
+  const { userId } = useParams<{ userId: string }>();
+
   return (
     <div
       className="h-screen w-screen"
@@ -31,6 +34,11 @@ function App() {
       }}
     >
       <Navbar />
+      {/* URL'den okunan userId'yi göster */}
+      <div className="bg-black bg-opacity-50 text-white p-4 m-4 rounded">
+        <h2 className="text-lg font-semibold">Aktif Kullanıcı ID:</h2>
+        <p className="text-sm">{userId}</p>
+      </div>
       <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
