@@ -1,4 +1,4 @@
-import { ErrorBoundary } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import Davetiye from "./components/Davetiye";
 import Konum from "./components/Konum";
 import Navbar from "./components/Navbar";
@@ -32,23 +32,23 @@ function App() {
     >
       <Navbar />
       <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
-        <ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
         </ErrorBoundary>
         
-        <ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Weather />
         </ErrorBoundary>
         
-        <ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Konum />
         </ErrorBoundary>
         
-        <ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Yorumlar />
         </ErrorBoundary>
         
-        <ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ResimEkle />
         </ErrorBoundary>
       </div>
