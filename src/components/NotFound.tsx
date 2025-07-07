@@ -7,12 +7,15 @@ const NotFound: React.FC = () => {
         <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Kullanıcı Bulunamadı</h2>
         <p className="text-gray-600 mb-8">Aradığınız kullanıcı mevcut değil veya silinmiş olabilir.</p>
-        <button 
-          onClick={() => window.history.back()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
-        >
-          Geri Dön
-        </button>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+          <p className="text-gray-700 mb-2">Yardım için iletişime geçin:</p>
+          <a 
+            href="mailto:cuneytdonmez8@gmail.com"
+            className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors"
+          >
+            cuneytdonmez8@gmail.com
+          </a>
+        </div>
       </div>
     </div>
   );

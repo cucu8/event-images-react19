@@ -9,11 +9,17 @@ import Yorumlar from "./components/Yorumlar";
 import { useUserValidation } from "./hooks/useUserValidation";
 
 // Error fallback component
-const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => (
+const ErrorFallback = ({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error;
+  resetErrorBoundary: () => void;
+}) => (
   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-4">
     <strong className="font-bold">Bir hata oluştu: </strong>
     <span className="block sm:inline">{error.message}</span>
-    <button 
+    <button
       onClick={resetErrorBoundary}
       className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
     >
@@ -26,7 +32,6 @@ function App() {
   const { userId } = useParams<{ userId: string }>();
   const { user, loading, error, userExists } = useUserValidation(userId);
 
-  // Loading durumunda spinner göster
   if (loading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-gray-900">
@@ -63,23 +68,23 @@ function App() {
             {user.email && <p>Email: {user.email}</p>}
           </div>
         )}
-        
+
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
         </ErrorBoundary>
-        
+
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Weather />
         </ErrorBoundary>
-        
+
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Konum />
         </ErrorBoundary>
-        
+
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Yorumlar />
         </ErrorBoundary>
-        
+
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ResimEkle />
         </ErrorBoundary>
