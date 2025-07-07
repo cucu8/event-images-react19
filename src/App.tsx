@@ -1,11 +1,12 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import Davetiye from "./components/Davetiye";
 import Konum from "./components/Konum";
 import Navbar from "./components/Navbar";
 import ResimEkle from "./components/ResimEkle";
 import Weather from "./components/Weather";
 import Yorumlar from "./components/Yorumlar";
+import { useUserValidation } from "./hooks/useUserValidation";
 
 // Error fallback component
 const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => (
@@ -23,6 +24,24 @@ const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetError
 
 function App() {
   const { userId } = useParams<{ userId: string }>();
+  const { user, loading, error, userExists } = useUserValidation(userId);
+
+  // Loading durumunda spinner göster
+  if (loading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-xl">Kullanıcı bilgileri yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Kullanıcı bulunamazsa NotFound'a yönlendir
+  if (!userExists || error) {
+    return <Navigate to="/not-found" replace />;
+  }
 
   return (
     <div
@@ -34,12 +53,17 @@ function App() {
       }}
     >
       <Navbar />
-      {/* URL'den okunan userId'yi göster */}
-      <div className="bg-black bg-opacity-50 text-white p-4 m-4 rounded">
-        <h2 className="text-lg font-semibold">Aktif Kullanıcı ID:</h2>
-        <p className="text-sm">{userId}</p>
-      </div>
       <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
+        {/* Kullanıcı bilgilerini göster (geliştirme amaçlı) */}
+        {user && (
+          <div className="bg-black bg-opacity-50 p-4 rounded-lg mb-4">
+            <h3 className="text-lg font-bold mb-2">Kullanıcı Bilgileri:</h3>
+            <p>ID: {user.id}</p>
+            {user.name && <p>İsim: {user.name}</p>}
+            {user.email && <p>Email: {user.email}</p>}
+          </div>
+        )}
+        
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
         </ErrorBoundary>

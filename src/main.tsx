@@ -7,7 +7,9 @@ import NotFound from "./components/NotFound.tsx";
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Routes>
+      <Route path="/user/:userId" element={<App />} />
       <Route path="/:userId" element={<App />} />
+      <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
