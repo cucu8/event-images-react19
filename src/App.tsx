@@ -4,6 +4,7 @@ import Davetiye from "./components/Davetiye";
 import Konum from "./components/Konum";
 import Navbar from "./components/Navbar";
 import ResimEkle from "./components/ResimEkle";
+import VideoEkle from "./components/VideoEkle";
 import Weather from "./components/Weather";
 import Yorumlar from "./components/Yorumlar";
 import { useUserValidation } from "./hooks/useUserValidation";
@@ -30,7 +31,7 @@ const ErrorFallback = ({
 
 function App() {
   const { userId } = useParams<{ userId: string }>();
-  const { user, loading, error, userExists } = useUserValidation(userId);
+  const { loading, error, userExists } = useUserValidation(userId);
 
   if (loading) {
     return (
@@ -43,7 +44,6 @@ function App() {
     );
   }
 
-  // Kullanıcı bulunamazsa NotFound'a yönlendir
   if (!userExists || error) {
     return <Navigate to="/not-found" replace />;
   }
@@ -60,14 +60,6 @@ function App() {
       <Navbar />
       <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
         {/* Kullanıcı bilgilerini göster (geliştirme amaçlı) */}
-        {user && (
-          <div className="bg-black bg-opacity-50 p-4 rounded-lg mb-4">
-            <h3 className="text-lg font-bold mb-2">Kullanıcı Bilgileri:</h3>
-            <p>ID: {user.id}</p>
-            {user.name && <p>İsim: {user.name}</p>}
-            {user.email && <p>Email: {user.email}</p>}
-          </div>
-        )}
 
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
@@ -87,6 +79,10 @@ function App() {
 
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ResimEkle />
+        </ErrorBoundary>
+
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <VideoEkle />
         </ErrorBoundary>
       </div>
     </div>
