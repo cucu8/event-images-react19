@@ -1,4 +1,10 @@
-import { useState, useEffect, useActionState, useOptimistic, startTransition } from "react";
+import {
+  useState,
+  useEffect,
+  useActionState,
+  useOptimistic,
+  startTransition,
+} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -31,12 +37,15 @@ const Yorumlar = () => {
     yorumlar,
     (state: Yorum[], newYorum: Yorum) => [newYorum, ...state]
   );
-  const [formState, formAction, isPending] = useActionState<FormState, FormData>(
+  const [formState, formAction, isPending] = useActionState<
+    FormState,
+    FormData
+  >(
     async (prevState: FormState, formData: FormData): Promise<FormState> => {
       try {
         const isim = formData.get("isim") as string;
         const yorum = formData.get("yorum") as string;
-        
+
         if (!isim?.trim() || !yorum?.trim()) {
           return { success: false, error: "Lütfen tüm alanları doldurun." };
         }
@@ -50,34 +59,46 @@ const Yorumlar = () => {
         const response = await axios.post(`${apiUrl}/Comment`, {
           content: yorum.trim(),
           name: isim.trim(),
-          userId: userId
+          userId: userId,
         });
-        
+
         // Başarılı response'dan sonra yorumları yeniden yükle
         if (response.status === 200 || response.status === 201) {
           // Yorumları yeniden fetch et
-          const commentsResponse = await axios.get(`${apiUrl}/Comment/user/${userId}`);
+          const commentsResponse = await axios.get(
+            `${apiUrl}/Comment/user/${userId}`
+          );
           if (commentsResponse.data && Array.isArray(commentsResponse.data)) {
-            const convertedComments: Yorum[] = commentsResponse.data.map((comment: Comment) => ({
-             id: comment.id.toString(),
-             isim: comment.name,
-             yorum: comment.content,
-             tarih: new Date()
-           }));
-            
+            const convertedComments: Yorum[] = commentsResponse.data.map(
+              (comment: Comment) => ({
+                id: comment.id.toString(),
+                isim: comment.name,
+                yorum: comment.content,
+                tarih: new Date(),
+              })
+            );
+            console.log(convertedComments);
             startTransition(() => {
               setYorumlar(convertedComments);
             });
           }
         }
-        
+
         return { success: true, error: "" };
       } catch (err: unknown) {
-        console.error('Yorum gönderilirken hata:', err);
+        console.error("Yorum gönderilirken hata:", err);
         if (axios.isAxiosError(err)) {
-          return { success: false, error: `Yorum gönderilirken hata: ${err.response?.status || 'Bilinmeyen hata'}` };
+          return {
+            success: false,
+            error: `Yorum gönderilirken hata: ${
+              err.response?.status || "Bilinmeyen hata"
+            }`,
+          };
         }
-        return { success: false, error: "Yorum gönderilirken bir hata oluştu." };
+        return {
+          success: false,
+          error: "Yorum gönderilirken bir hata oluştu.",
+        };
       }
     },
     { success: false, error: "" }
@@ -95,23 +116,29 @@ const Yorumlar = () => {
         setError(null);
         const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.get(`${apiUrl}/Comment/user/${userId}`);
-        
+
         if (response.data && Array.isArray(response.data)) {
           // API verilerini Yorum formatına dönüştür
-          const convertedComments: Yorum[] = response.data.map((comment: Comment) => ({
-            id: comment.id.toString(),
-            isim: comment.name,
-            yorum: comment.content,
-            tarih: new Date() // API'de tarih yoksa şu anki zamanı kullan
-          }));
+          const convertedComments: Yorum[] = response.data.map(
+            (comment: Comment) => ({
+              id: comment.id.toString(),
+              isim: comment.name,
+              yorum: comment.content,
+              tarih: new Date(), // API'de tarih yoksa şu anki zamanı kullan
+            })
+          );
           setYorumlar(convertedComments);
         }
       } catch (err: unknown) {
-        console.error('Yorumlar yüklenirken hata:', err);
+        console.error("Yorumlar yüklenirken hata:", err);
         if (axios.isAxiosError(err)) {
-          setError(`Yorumlar yüklenirken hata: ${err.response?.status || 'Bilinmeyen hata'}`);
+          setError(
+            `Yorumlar yüklenirken hata: ${
+              err.response?.status || "Bilinmeyen hata"
+            }`
+          );
         } else {
-          setError('Yorumlar yüklenirken bir hata oluştu.');
+          setError("Yorumlar yüklenirken bir hata oluştu.");
         }
       } finally {
         setLoading(false);
@@ -124,21 +151,21 @@ const Yorumlar = () => {
   const handleSubmitWithOptimistic = (formData: FormData) => {
     const isim = formData.get("isim") as string;
     const yorum = formData.get("yorum") as string;
-    
+
     if (!isim?.trim() || !yorum?.trim()) return;
-    
+
     const optimisticYorum: Yorum = {
       id: `temp-${Date.now()}`,
       isim: isim.trim(),
       yorum: yorum.trim(),
-      tarih: new Date()
+      tarih: new Date(),
     };
-    
+
     addOptimisticYorum(optimisticYorum);
     formAction(formData);
-    
+
     // Form'u temizle
-    const form = document.querySelector('form') as HTMLFormElement;
+    const form = document.querySelector("form") as HTMLFormElement;
     if (form) {
       form.reset();
     }
@@ -150,14 +177,14 @@ const Yorumlar = () => {
       className="flex flex-col items-center my-8 w-full max-w-xl mx-auto"
     >
       <h2 className="text-xl font-bold mb-4 text-white">Yorumlar</h2>
-      
+
       {loading && (
         <div className="text-white/80 text-center mb-4">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
           Yorumlar yükleniyor...
         </div>
       )}
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -181,10 +208,14 @@ const Yorumlar = () => {
           className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[80px]"
         />
         {formState.error && (
-          <div className="text-red-600 font-medium text-sm">{formState.error}</div>
+          <div className="text-red-600 font-medium text-sm">
+            {formState.error}
+          </div>
         )}
         {formState.success && (
-          <div className="text-green-600 font-medium text-sm">Yorum başarıyla gönderildi!</div>
+          <div className="text-green-600 font-medium text-sm">
+            Yorum başarıyla gönderildi!
+          </div>
         )}
         <button
           type="submit"
@@ -205,14 +236,14 @@ const Yorumlar = () => {
           <div
             key={y.id}
             className={`bg-white/90 rounded-2xl shadow p-4 border border-gray-200 transition-opacity ${
-              y.id.startsWith('temp-') ? 'opacity-70' : 'opacity-100'
+              y.id.startsWith("temp-") ? "opacity-70" : "opacity-100"
             }`}
           >
             <div className="font-semibold text-indigo-900">{y.isim}</div>
             <div className="text-gray-800 whitespace-pre-line">{y.yorum}</div>
             <div className="text-xs text-pink-500 mt-1">
               {y.tarih.toLocaleString()}
-              {y.id.startsWith('temp-') && (
+              {y.id.startsWith("temp-") && (
                 <span className="ml-2 text-gray-400">(Gönderiliyor...)</span>
               )}
             </div>
