@@ -1,4 +1,5 @@
 import { useEffect, use, Suspense } from "react";
+import { useParams } from "react-router-dom";
 
 const KONUM = {
   latitude: 41.0082,
@@ -35,13 +36,12 @@ const WeatherContent = ({ weatherPromise }: { weatherPromise: Promise<number> })
 };
 
 const Weather = () => {
+  const { userId } = useParams<{ userId: string }>();
   const weatherPromise = fetchWeatherData();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("userId");
     console.log("Weather userId:", userId);
-  }, []);
+  }, [userId]);
 
   return (
     <section id="hava" className="flex flex-col items-center my-8">

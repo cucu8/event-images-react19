@@ -1,16 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { navLinks } from "../costants";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = window.location.pathname;
   const search = window.location.search;
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("userId");
-    console.log("Navbar userId:", userId);
-  }, []);
 
   return (
     <nav className="w-full bg-gradient-to-r from-indigo-500 via-pink-400 to-pink-300 shadow-lg fixed top-0 left-0 z-50">

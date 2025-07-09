@@ -24,7 +24,7 @@ const VideoEkle = () => {
     FormState,
     FormData
   >(
-    async (prevState: FormState, formData: FormData): Promise<FormState> => {
+    async (_prevState: FormState, formData: FormData): Promise<FormState> => {
       try {
         if (!userId) {
           return { success: false, error: "Kullanıcı ID bulunamadı." };

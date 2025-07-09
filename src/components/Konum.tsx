@@ -30,7 +30,7 @@ const Konum = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5175/api/User/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/User/${userId}`);
         setLocationData(response.data);
         setError("");
       } catch (err) {

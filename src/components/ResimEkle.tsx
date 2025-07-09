@@ -1,4 +1,11 @@
-import { useRef, useState, useEffect, useActionState, startTransition } from "react";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useActionState,
+  startTransition,
+} from "react";
+import { useParams } from "react-router-dom";
 
 const MAX_FILES = 5;
 
@@ -8,17 +15,67 @@ interface FormState {
 }
 
 const ResimEkle = () => {
+  const { userId } = useParams<{ userId: string }>();
   const [images, setImages] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formState, formAction, isPending] = useActionState<FormState, FormData>(
-    async (prevState: FormState, formData: FormData): Promise<FormState> => {
+  const [formState, formAction, isPending] = useActionState<
+    FormState,
+    FormData
+  >(
+    async (): Promise<FormState> => {
       try {
-        // Simulated upload - replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log("Uploading images...", formData);
+        if (!userId) {
+          return { success: false, error: "Kullanıcı ID'si bulunamadı." };
+        }
+
+        const apiFormData = new FormData();
+        apiFormData.append("userId", userId);
+
+        selectedFiles.forEach((file) => {
+          apiFormData.append("files", file);
+        });
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/Image/upload`,
+          {
+            method: "POST",
+            body: apiFormData,
+          }
+        );
+
+        console.log("Response status:", response.status);
+        console.log("Response ok:", response.ok);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error response:", errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // API başarılı response döndüyse (200), JSON parse etmeye çalışmayalım
+        // Çünkü API boş response dönebilir
+        let result = null;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          result = await response.json();
+        } else {
+          result = await response.text();
+        }
+
+        console.log("Upload successful:", result);
+
+        // Yükleme başarılı olduğunda seçili fotoğrafları sıfırla
+        setImages([]);
+        setSelectedFiles([]);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
         return { success: true, error: "" };
       } catch (err) {
+        console.error("Upload error:", err);
         return { success: false, error: "Yükleme sırasında bir hata oluştu." };
       }
     },
@@ -26,10 +83,8 @@ const ResimEkle = () => {
   );
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("userId");
     console.log("ResimEkle userId:", userId);
-  }, []);
+  }, [userId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -40,6 +95,7 @@ const ResimEkle = () => {
       return;
     }
     const fileArr = Array.from(files);
+    setSelectedFiles(fileArr);
     Promise.all(
       fileArr.map(
         (file) =>
@@ -58,6 +114,7 @@ const ResimEkle = () => {
   const handleReset = () => {
     startTransition(() => {
       setImages([]);
+      setSelectedFiles([]);
       setError("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -69,15 +126,20 @@ const ResimEkle = () => {
 
   const handleRemove = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <section id="resimekle" className="flex flex-col items-center my-8">
       <h2 className="text-xl font-bold mb-4 text-indigo-900">Fotoğraf Yükle</h2>
-      <form action={formAction} className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200">
+      <form
+        action={formAction}
+        className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200"
+      >
         <div className="relative w-full flex flex-col items-center">
           <input
             id="foto-sec"
+            name="files"
             type="file"
             accept="image/*"
             multiple
@@ -99,10 +161,14 @@ const ResimEkle = () => {
           )}
         </div>
         {(error || formState.error) && (
-          <div className="text-pink-600 font-medium text-sm">{error || formState.error}</div>
+          <div className="text-pink-600 font-medium text-sm">
+            {error || formState.error}
+          </div>
         )}
         {formState.success && (
-          <div className="text-green-600 font-medium text-sm">Fotoğraflar başarıyla yüklendi!</div>
+          <div className="text-green-600 font-medium text-sm">
+            Fotoğraflar başarıyla yüklendi!
+          </div>
         )}
         {images.length > 0 && (
           <div className="flex flex-wrap gap-4 justify-center">

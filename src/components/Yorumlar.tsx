@@ -41,7 +41,7 @@ const Yorumlar = () => {
     FormState,
     FormData
   >(
-    async (prevState: FormState, formData: FormData): Promise<FormState> => {
+    async (_prevState: FormState, formData: FormData): Promise<FormState> => {
       try {
         const isim = formData.get("isim") as string;
         const yorum = formData.get("yorum") as string;
