@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface Comment {
   id: number;
@@ -33,6 +34,7 @@ const Yorumlar = () => {
   const [yorumlar, setYorumlar] = useState<Yorum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [optimisticYorumlar, addOptimisticYorum] = useOptimistic(
     yorumlar,
     (state: Yorum[], newYorum: Yorum) => [newYorum, ...state]
@@ -54,12 +56,17 @@ const Yorumlar = () => {
           return { success: false, error: "Kullanıcı ID'si bulunamadı." };
         }
 
+        if (!recaptchaToken) {
+          return { success: false, error: "Doğrulama yapınız." };
+        }
+
         // API'ye POST isteği gönder
         const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.post(`${apiUrl}/Comment`, {
           content: yorum.trim(),
           name: isim.trim(),
           userId: userId,
+          recaptchaToken: recaptchaToken,
         });
 
         // Başarılı response'dan sonra yorumları yeniden yükle
@@ -80,6 +87,7 @@ const Yorumlar = () => {
             console.log(convertedComments);
             startTransition(() => {
               setYorumlar(convertedComments);
+              setRecaptchaToken(null); // Reset recaptcha token after successful submission
             });
           }
         }
@@ -148,6 +156,10 @@ const Yorumlar = () => {
     fetchComments();
   }, [userId]);
 
+  const handleRecaptchaChange = (token: string) => {
+    setRecaptchaToken(token);
+  };
+
   const handleSubmitWithOptimistic = (formData: FormData) => {
     const isim = formData.get("isim") as string;
     const yorum = formData.get("yorum") as string;
@@ -206,6 +218,10 @@ const Yorumlar = () => {
           placeholder="Yorumunuz"
           required
           className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[80px]"
+        />
+        <ReCAPTCHA
+          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+          onChange={handleRecaptchaChange}
         />
         {formState.error && (
           <div className="text-red-600 font-medium text-sm">

@@ -55,6 +55,7 @@ function App() {
         backgroundImage: "url('/main.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        
       }}
     >
       <Navbar />

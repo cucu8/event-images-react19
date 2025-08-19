@@ -1,12 +1,7 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-  useActionState,
-  startTransition,
-} from "react";
+import { useRef, useState, useActionState, startTransition } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const MAX_FILES = 1;
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -17,6 +12,8 @@ interface FormState {
 }
 
 const VideoEkle = () => {
+  const { userId } = useParams<{ userId: string }>();
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +27,10 @@ const VideoEkle = () => {
           return { success: false, error: "Kullanıcı ID bulunamadı." };
         }
 
+        if (!recaptchaToken) {
+          return { success: false, error: "Doğrulama yapınız." };
+        }
+
         const files = formData.getAll("videos") as File[];
         if (files.length === 0) {
           return { success: false, error: "Video seçilmedi." };
@@ -40,6 +41,7 @@ const VideoEkle = () => {
           const videoFormData = new FormData();
           videoFormData.append("videoFile", file);
           videoFormData.append("userId", userId);
+          videoFormData.append("recaptchaToken", recaptchaToken);
 
           await axios.post(
             `${import.meta.env.VITE_API_URL}/Video?userId=${userId}`,
@@ -81,12 +83,6 @@ const VideoEkle = () => {
     },
     { success: false, error: "" }
   );
-
-  const { userId } = useParams<{ userId: string }>();
-
-  useEffect(() => {
-    console.log("VideoEkle userId:", userId);
-  }, [userId]);
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -145,6 +141,10 @@ const VideoEkle = () => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleRecaptchaChange = (token: string) => {
+    setRecaptchaToken(token);
+  };
+
   return (
     <section id="videoekle" className="flex flex-col items-center my-8">
       <h2 className="text-xl font-bold mb-4 text-indigo-900">Video Yükle</h2>
@@ -188,6 +188,7 @@ const VideoEkle = () => {
             Video başarıyla yüklendi!
           </div>
         )}
+
         {videos.length > 0 && (
           <div className="flex flex-wrap gap-4 justify-center">
             {videos.map((video, i) => (
@@ -229,6 +230,10 @@ const VideoEkle = () => {
             ))}
           </div>
         )}
+        <ReCAPTCHA
+          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+          onChange={handleRecaptchaChange}
+        />
         <div className="flex gap-2 mt-2">
           <button
             type="submit"

@@ -1,12 +1,6 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-  useActionState,
-  startTransition,
-} from "react";
+import { useRef, useState, useActionState, startTransition } from "react";
 import { useParams } from "react-router-dom";
-
+import ReCAPTCHA from "react-google-recaptcha";
 const MAX_FILES = 5;
 
 interface FormState {
@@ -16,6 +10,7 @@ interface FormState {
 
 const ResimEkle = () => {
   const { userId } = useParams<{ userId: string }>();
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [images, setImages] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState("");
@@ -30,9 +25,14 @@ const ResimEkle = () => {
           return { success: false, error: "Kullanıcı ID'si bulunamadı." };
         }
 
-        const apiFormData = new FormData();
-        apiFormData.append("userId", userId);
+        if (!recaptchaToken) {
+          return { success: false, error: "Doğrulama yapınız." };
+        }
 
+        const apiFormData = new FormData();
+
+        apiFormData.append("userId", userId);
+        apiFormData.append("recaptchaToken", recaptchaToken);
         selectedFiles.forEach((file) => {
           apiFormData.append("files", file);
         });
@@ -51,6 +51,7 @@ const ResimEkle = () => {
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Error response:", errorText);
+
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -67,8 +68,10 @@ const ResimEkle = () => {
         console.log("Upload successful:", result);
 
         // Yükleme başarılı olduğunda seçili fotoğrafları sıfırla
+        setRecaptchaToken(null);
         setImages([]);
         setSelectedFiles([]);
+
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -81,10 +84,6 @@ const ResimEkle = () => {
     },
     { success: false, error: "" }
   );
-
-  useEffect(() => {
-    console.log("ResimEkle userId:", userId);
-  }, [userId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -127,6 +126,10 @@ const ResimEkle = () => {
   const handleRemove = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleRecaptchaChange = (token: string) => {
+    setRecaptchaToken(token);
   };
 
   return (
@@ -194,6 +197,11 @@ const ResimEkle = () => {
             ))}
           </div>
         )}
+        <input type="file" multiple onChange={handleFileChange} />
+        <ReCAPTCHA
+          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+          onChange={handleRecaptchaChange}
+        />
         <div className="flex gap-2 mt-2">
           <button
             type="submit"
