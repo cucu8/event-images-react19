@@ -9,7 +9,6 @@ import Weather from "./components/Weather";
 import Yorumlar from "./components/Yorumlar";
 import { useUserValidation } from "./hooks/useUserValidation";
 
-// Error fallback component
 const ErrorFallback = ({
   error,
   resetErrorBoundary,
@@ -50,18 +49,23 @@ function App() {
 
   return (
     <div
-      className="h-screen w-screen"
+      className="h-screen w-screen relative"
       style={{
-        backgroundImage: "url('/main.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        
+        position: "relative",
       }}
     >
+      {/* Blurred background */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          backgroundImage: "url('/main.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(4px)",
+        }}
+      />
       <Navbar />
       <div className="h-full w-full p-2 sm:p-4 md:p-8 text-white overflow-auto">
-        {/* Kullanıcı bilgilerini göster (geliştirme amaçlı) */}
-
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Davetiye />
         </ErrorBoundary>

@@ -33,7 +33,6 @@ const Yorumlar = () => {
   const { userId } = useParams<{ userId: string }>();
   const [yorumlar, setYorumlar] = useState<Yorum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [optimisticYorumlar, addOptimisticYorum] = useOptimistic(
     yorumlar,
@@ -121,7 +120,7 @@ const Yorumlar = () => {
 
       try {
         setLoading(true);
-        setError(null);
+
         const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.get(`${apiUrl}/Comment/user/${userId}`);
 
@@ -140,13 +139,11 @@ const Yorumlar = () => {
       } catch (err: unknown) {
         console.error("Yorumlar yüklenirken hata:", err);
         if (axios.isAxiosError(err)) {
-          setError(
+          console.log(
             `Yorumlar yüklenirken hata: ${
               err.response?.status || "Bilinmeyen hata"
             }`
           );
-        } else {
-          setError("Yorumlar yüklenirken bir hata oluştu.");
         }
       } finally {
         setLoading(false);
@@ -197,11 +194,6 @@ const Yorumlar = () => {
         </div>
       )}
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
       <form
         action={handleSubmitWithOptimistic}
         className="w-full bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-3 mb-6 border border-gray-200"
