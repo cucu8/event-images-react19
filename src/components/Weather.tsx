@@ -45,7 +45,7 @@ const Weather = () => {
 
   return (
     <section id="hava" className="flex flex-col items-center my-8">
-      <h2 className="text-xl font-bold mb-4 text-indigo-900">
+      <h2 className="text-2xl font-satisfy font-bold mb-4 text-indigo-900">
         Davet Günü Hava Durumu
       </h2>
       <Suspense fallback={

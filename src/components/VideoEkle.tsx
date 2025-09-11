@@ -147,7 +147,7 @@ const VideoEkle = () => {
 
   return (
     <section id="videoekle" className="flex flex-col items-center my-8">
-      <h2 className="text-xl font-bold mb-4 text-indigo-900">Video Yükle</h2>
+      <h2 className="text-2xl font-dancing-script font-bold mb-4 text-indigo-900">Video Yükle</h2>
       <form
         action={(formData) => {
           // Add selected files to FormData

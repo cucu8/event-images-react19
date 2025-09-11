@@ -134,7 +134,7 @@ const ResimEkle = () => {
 
   return (
     <section id="resimekle" className="flex flex-col items-center my-8">
-      <h2 className="text-xl font-bold mb-4 text-indigo-900">Fotoğraf Yükle</h2>
+      <h2 className="text-2xl font-dancing-script font-bold mb-4 text-indigo-900">Fotoğraf Yükle</h2>
       <form
         action={formAction}
         className="bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 w-full max-w-md border border-gray-200"

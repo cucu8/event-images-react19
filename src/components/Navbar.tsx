@@ -22,7 +22,7 @@ const Navbar = () => {
             <a
               key={link.name}
               href={`${pathname}${search}${link.href}`}
-              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
+              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-kalam font-medium px-4 py-2 rounded-full"
             >
               {link.name}
             </a>
@@ -58,7 +58,7 @@ const Navbar = () => {
             <a
               key={link.name}
               href={`${pathname}${search}${link.href}`}
-              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-medium px-4 py-2 rounded-full"
+              className="text-white hover:bg-pink-100/40 hover:text-indigo-700 transition-colors duration-200 font-kalam font-medium px-4 py-2 rounded-full"
               onClick={() => setMenuOpen(false)}
             >
               {link.name}

@@ -185,7 +185,7 @@ const Yorumlar = () => {
       id="yorumlar"
       className="flex flex-col items-center my-8 w-full max-w-xl mx-auto"
     >
-      <h2 className="text-xl font-bold mb-4 text-white">Yorumlar</h2>
+      <h2 className="text-2xl font-caveat font-bold mb-4 text-white">Yorumlar</h2>
 
       {loading && (
         <div className="text-white/80 text-center mb-4">
@@ -247,7 +247,7 @@ const Yorumlar = () => {
               y.id.startsWith("temp-") ? "opacity-70" : "opacity-100"
             }`}
           >
-            <div className="font-semibold text-indigo-900">{y.isim}</div>
+            <div className="font-semibold text-indigo-900 font-caveat text-lg">{y.isim}</div>
             <div className="text-gray-800 whitespace-pre-line">{y.yorum}</div>
             <div className="text-xs text-pink-500 mt-1">
               {y.tarih.toLocaleString()}
