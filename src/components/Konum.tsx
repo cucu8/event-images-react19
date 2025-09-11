@@ -16,7 +16,7 @@ const Konum = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const mapsUrl = locationData 
+  const mapsUrl = locationData
     ? `https://www.google.com/maps?q=${locationData.latitude},${locationData.longitude}`
     : "";
 
@@ -30,7 +30,9 @@ const Konum = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/User/${userId}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/User/${userId}`
+        );
         setLocationData(response.data);
         setError("");
       } catch (err) {
@@ -68,8 +70,21 @@ const Konum = () => {
       {locationData && (
         <>
           <div className="text-center mb-4">
-            <h3 className="text-lg font-bold text-white">{locationData.locationName}</h3>
-            <p className="text-base font-bold text-white">{locationData.name}</p>
+            <h3 className="text-lg font-bold text-white flex items-center justify-center gap-2">
+              <svg 
+                className="w-8 h-8 text-white" 
+                fill="currentColor" 
+                viewBox="0 0 20 20" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path 
+                  fillRule="evenodd" 
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" 
+                  clipRule="evenodd"
+                />
+              </svg>
+              {locationData.locationName}
+            </h3>
           </div>
           <a
             href={mapsUrl}

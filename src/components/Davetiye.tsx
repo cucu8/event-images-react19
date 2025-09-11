@@ -15,10 +15,9 @@ const Davetiye = () => {
             src={`${apiUrl}/InvitationImage/user/${userId}/image`}
             alt="Davetiye"
             className="w-full h-auto object-cover"
-            style={{ maxHeight: 400 }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = '/martini_glass.svg';
+              target.src = "/martini_glass.svg";
             }}
           />
         ) : (
