@@ -49,7 +49,7 @@ const Konum = () => {
   if (loading) {
     return (
       <section id="konum" className="flex flex-col items-center my-8 p-12">
-        <h2 className="text-2xl font-caveat font-bold mb-4 text-indigo-900">Davet Yeri</h2>
+        <h2 className="text-4xl font-caveat font-bold mb-4 text-indigo-900">Davet Yeri</h2>
         <div className="text-gray-600">Konum bilgisi yükleniyor...</div>
       </section>
     );
@@ -58,7 +58,7 @@ const Konum = () => {
   if (error) {
     return (
       <section id="konum" className="flex flex-col items-center my-8 p-12">
-        <h2 className="text-2xl font-caveat font-bold mb-4 text-indigo-900">Davet Yeri</h2>
+        <h2 className="text-4xl font-caveat font-bold mb-4 text-indigo-900">Davet Yeri</h2>
         <div className="text-red-600">{error}</div>
       </section>
     );
@@ -66,7 +66,7 @@ const Konum = () => {
 
   return (
     <section id="konum" className="flex flex-col items-center my-8 p-12">
-      <h2 className="text-xl font-bold mb-4 text-indigo-900">Davet Yeri</h2>
+      <h2 className="text-4xl font-bold mb-4 text-indigo-900">Davet Yeri</h2>
       {locationData && (
         <>
           <div className="text-center mb-4">
